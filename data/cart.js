@@ -67,3 +67,16 @@ export function updateQuantity(productId, newQuantity) {
     saveToStorage(); // Save updated cart to localStorage
   }
 }
+
+export function updateDeliveryOption(productId, deliveryOptionId) {
+
+  let matchingItem;
+  // Check if the product is already in the cart
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+  });
+  matchingItem.deliveryOptionId = deliveryOptionId; // Update delivery option ID
+  saveToStorage(); // Save updated cart to localStorage
+}

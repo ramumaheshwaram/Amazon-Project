@@ -1,5 +1,5 @@
 // Importing necessary data and functions from other modules
-import { cart, removeCart, calculateCartQuantity, updateQuantity } from "../data/cart.js"; // Imports cart and cart-related functions
+import { cart, removeCart, calculateCartQuantity, updateQuantity, updateDeliveryOption } from "../data/cart.js"; // Imports cart and cart-related functions
 import { products } from "../data/products.js"; // Imports products array
 import { formateCurrency } from "./utils/money.js"; // Imports utility function to format price
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // Imports dayjs for date manipulation
@@ -103,7 +103,10 @@ function delivryOptionsHTML(matchingProduct, cartItem) {
 
     // Append HTML for each delivery option to HTML
     html += `
-    <div class="delivery-option">
+    <div class="delivery-option js-delivery-option"
+            data-product-id="${matchingProduct.id}"
+            data-delivery-option-id="${deliveryOption.id}">
+            <!-- Data attributes for product and delivery option IDs -->
             <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
             <div>
               <div class="delivery-option-date">
@@ -173,3 +176,14 @@ document.querySelectorAll('.js-save-link').forEach((link) => {
 
 // Initial call to update cart quantity display when page loads
 updateCartQuantityDisplay();
+
+document.querySelectorAll('.js-delivery-option')
+  .forEach((option) => {
+    option.addEventListener('click', () => {
+      // shorthend propertie because we are using data attributes
+      // to store productId and deliveryOptionId
+      // so we can access them directly from the clicked option
+      const { productId, deliveryOptionId } = option.dataset; // Destructure data attributes from the clicked delivery option
+      updateDeliveryOption(productId, deliveryOptionId);
+    });
+  });

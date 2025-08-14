@@ -2,6 +2,11 @@
 import { cart, removeCart, calculateCartQuantity, updateQuantity } from "../data/cart.js"; // Imports cart and cart-related functions
 import { products } from "../data/products.js"; // Imports products array
 import { formateCurrency } from "./utils/money.js"; // Imports utility function to format price
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // Imports dayjs for date manipulation
+
+import { deliveryOptons } from "../data/deliveryOptions.js"; // Imports delivery options data
+
+
 
 // Initialize an empty string to store HTML for cart summary
 let cartSummaryHTML = '';
@@ -21,11 +26,26 @@ cart.forEach((cartItem) => {
   // Skip if no matching product is found
   if (!matchingProduct) return;
 
+  const deliveryOptionId = cartItem.deliveryOptionId; // Get delivery option ID from cart item
+
+  let deliveryOption;
+  deliveryOptons.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option; // Find the delivery option that matches the cart item's delivery option ID
+    }
+  });
+  // Skip if no deliveryOption is found
+  if (!deliveryOption) return;
+
+  const today = dayjs();
+  const deliveryDate = today.add(deliveryOption.deliveryDays, 'days'); // Calculate the date one week from today
+  const formattedDate = deliveryDate.format('dddd, MMMM D'); // Format the date
+
   // Append HTML for each cart item to cartSummaryHTML
   cartSummaryHTML += `
     <div class="cart-item-container js-cart-item-container-${matchingProduct.id}"> <!-- Container for cart item -->
-      <div class="delivery-date">
-        Delivery date: Tuesday, June 21 <!-- Hardcoded delivery date -->
+      <div class="delivery-date js-delivery-date">
+        Delivery date: ${formattedDate} <!-- Hardcoded delivery date -->
       </div>
       <div class="cart-item-details-grid">
         <img class="product-image" src="${matchingProduct.image}"> <!-- Product image -->
@@ -61,47 +81,42 @@ cart.forEach((cartItem) => {
           <div class="delivery-options-title">
             Choose a delivery option:
           </div>
-          <!-- Delivery option: Free shipping -->
-          <div class="delivery-option">
-            <input type="radio" checked class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Tuesday, June 21
-              </div>
-              <div class="delivery-option-price">
-                FREE Shipping
-              </div>
-            </div>
-          </div>
-          <!-- Delivery option: $4.99 shipping -->
-          <div class="delivery-option">
-            <input type="radio" class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Wednesday, June 15
-              </div>
-              <div class="delivery-option-price">
-                $4.99 - Shipping
-              </div>
-            </div>
-          </div>
-          <!-- Delivery option: $9.99 shipping -->
-          <div class="delivery-option">
-            <input type="radio" class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Monday, June 13
-              </div>
-              <div class="delivery-option-price">
-                $9.99 - Shipping
-              </div>
-            </div>
-          </div>
+          ${delivryOptionsHTML(matchingProduct, cartItem)} <!-- Call function to generate delivery options HTML -->
         </div>
       </div>
     </div>
   `;
 });
+
+function delivryOptionsHTML(matchingProduct, cartItem) {
+
+  let html = '';
+  // Loop through each delivery option to generate HTML for delivery options
+  deliveryOptons.forEach((deliveryOption) => {
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days'); // Calculate the date one week from today
+    const formattedDate = deliveryDate.format('dddd, MMMM D'); // Format the date
+
+    const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${formateCurrency(deliveryOption.priceCents)} -`; // Format price or show "FREE Shipping"
+
+    const isChecked = deliveryOption.id === cartItem.deliveryOptionId; // Check if this option is selected in the cart
+
+    // Append HTML for each delivery option to HTML
+    html += `
+    <div class="delivery-option">
+            <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
+            <div>
+              <div class="delivery-option-date">
+                ${formattedDate} <!-- Display formatted delivery date -->
+              </div>
+              <div class="delivery-option-price">
+               ${priceString} Shipping <!-- Display formatted price or "FREE Shipping" -->
+              </div>
+            </div>
+          </div>`
+  });
+  return html; // Return the generated HTML for delivery options
+}
 
 // Inject the generated cart summary HTML into the order summary element on the page
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
@@ -111,8 +126,7 @@ function updateCartQuantityDisplay() {
   const cartQuantity = calculateCartQuantity(); // Calculate total items in cart
   // Update the "Return to Home" link with cart quantity
   document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`;
-  // Update the cart quantity display
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+
 }
 
 // Add event listeners to all "Delete" links

@@ -6,6 +6,7 @@ import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; /
 
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js"; // Imports delivery options data
 
+import { renderPaymentSummary } from "./paymentSummary.js"; // Imports function to render payment summary
 
 export function renderOrderSummary() {
 
@@ -129,7 +130,8 @@ export function renderOrderSummary() {
       const productId = link.dataset.productId; // Get product ID from link's data attribute
       removeCart(productId); // Remove item from cart
       const container = document.querySelector(`.js-cart-item-container-${productId}`); // Get cart item container
-      container.remove(); // Remove item from the page
+      container.remove(); // Remove item from the page 
+      renderPaymentSummary(); // Re-render payment summary to reflect changes
       updateCartQuantityDisplay(); // Update cart quantity display
     });
   });
@@ -177,6 +179,7 @@ export function renderOrderSummary() {
         const { productId, deliveryOptionId } = option.dataset; // Destructure data attributes from the clicked delivery option
         updateDeliveryOption(productId, deliveryOptionId);
         renderOrderSummary(); // Re-render order summary to reflect changes //recursion
+        renderPaymentSummary(); // Re-render payment summary to reflect changes
       });
     });
 }

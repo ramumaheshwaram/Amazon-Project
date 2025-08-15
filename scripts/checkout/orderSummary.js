@@ -1,10 +1,10 @@
 // Importing necessary data and functions from other modules
 import { cart, removeCart, calculateCartQuantity, updateQuantity, updateDeliveryOption } from "../../data/cart.js"; // Imports cart and cart-related functions
-import { products } from "../../data/products.js"; // Imports products array
+import { products, getProduct } from "../../data/products.js"; // Imports products array
 import { formateCurrency } from "../utils/money.js"; // Imports utility function to format price
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // Imports dayjs for date manipulation
 
-import { deliveryOptions } from "../../data/deliveryOptions.js"; // Imports delivery options data
+import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js"; // Imports delivery options data
 
 
 export function renderOrderSummary() {
@@ -16,25 +16,15 @@ export function renderOrderSummary() {
   cart.forEach((cartItem) => {
     const productId = cartItem.productId; // Get product ID from cart item
 
-    let matchingProduct;
     // Find the product in the products array that matches the cart item's product ID
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-      }
-    });
+    const matchingProduct = getProduct(productId);
 
     // Skip if no matching product is found
     if (!matchingProduct) return;
 
     const deliveryOptionId = cartItem.deliveryOptionId; // Get delivery option ID from cart item
 
-    let deliveryOption;
-    deliveryOptions.forEach((option) => {
-      if (option.id === deliveryOptionId) {
-        deliveryOption = option; // Find the delivery option that matches the cart item's delivery option ID
-      }
-    });
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
     // Skip if no deliveryOption is found
     if (!deliveryOption) return;
 

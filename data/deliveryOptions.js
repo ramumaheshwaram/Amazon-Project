@@ -16,3 +16,13 @@ export const deliveryOptions = [
   }
 
 ];
+
+export function getDeliveryOption(deliveryOptionId) {
+  let deliveryOption;
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option; // Find the delivery option that matches the cart item's delivery option ID
+    }
+  });
+  return deliveryOption || deliveryOptions[0]; // Return the found delivery option
+}

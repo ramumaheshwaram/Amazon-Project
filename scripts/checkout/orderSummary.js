@@ -3,7 +3,7 @@ import { cart, removeCart, calculateCartQuantity, updateQuantity, updateDelivery
 import { products, getProduct } from "../../data/products.js"; // Products data
 import { formateCurrency } from "../utils/money.js"; // Currency formatting utility
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // Date manipulation library
-import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js"; // Delivery options data
+import { deliveryOptions, getDeliveryOption, calculateDeliveryDates } from "../../data/deliveryOptions.js"; // Delivery options data
 import { renderPaymentSummary } from "./paymentSummary.js"; // Payment summary rendering function
 
 import { renderCheckoutHeader } from "../checkout/checkoutHeader.js";
@@ -21,9 +21,8 @@ export function renderOrderSummary() {
     const deliveryOption = getDeliveryOption(deliveryOptionId);
     if (!deliveryOption) return; // Skip if no delivery option found
 
-    const today = dayjs(); // Current date
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days'); // Calculate delivery date
-    const formattedDate = deliveryDate.format('dddd, MMMM D'); // Format date
+    const formattedDate = calculateDeliveryDates(deliveryOption);
+
 
     // Add cart item HTML to summary
     cartSummaryHTML += `
@@ -63,9 +62,7 @@ export function renderOrderSummary() {
   function delivryOptionsHTML(matchingProduct, cartItem) {
     let html = '';
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs(); // Current date
-      const deliveryDate = today.add(deliveryOption.deliveryDays, 'days'); // Calculate delivery date
-      const formattedDate = deliveryDate.format('dddd, MMMM D'); // Format date
+      const formattedDate = calculateDeliveryDates(deliveryOption);
       const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${formateCurrency(deliveryOption.priceCents)} -`; // Format price
       const isChecked = deliveryOption.id === cartItem.deliveryOptionId; // Check if option is selected
 
@@ -126,12 +123,11 @@ export function renderOrderSummary() {
       container.classList.remove('is-editing-quantity'); // Hide quantity input
       const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`); // Get quantity label
       quantityLabel.innerHTML = newQuantity; // Update displayed quantity
-      updateCartQuantityDisplay(); // Update quantity display
+      renderCheckoutHeader();
+      renderOrderSummary();
+      renderPaymentSummary();
     });
   });
-
-  // Update cart quantity display on page load
-  updateCartQuantityDisplay();
 
   // Add event listeners for delivery options
   document.querySelectorAll('.js-delivery-option').forEach((option) => {

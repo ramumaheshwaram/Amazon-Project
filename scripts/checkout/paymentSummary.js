@@ -19,6 +19,10 @@ export function renderPaymentSummary() {
   const taxCents = totalBeforeTaxCents * 0.1;
   const totalCents = totalBeforeTaxCents + taxCents; // Calculate total price including tax
 
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity; // Calculate total quantity of items in the cart
+  });
 
   const paymentSummaryHtml = `
   
@@ -27,7 +31,7 @@ export function renderPaymentSummary() {
         </div>
 
         <div class="payment-summary-row">
-          <div>Items (3):</div>
+          <div >Items (${cartQuantity}):</div>
           <div class="payment-summary-money">$${formateCurrency(productPriceCents)}</div>
         </div>
 
@@ -56,5 +60,6 @@ export function renderPaymentSummary() {
         </button>
   `;
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHtml;
+  updateCartQuantityDisplay(); // Update cart quantity display
 }
 

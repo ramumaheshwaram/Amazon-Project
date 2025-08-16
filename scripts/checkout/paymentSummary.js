@@ -2,6 +2,7 @@ import { cart } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js"; // Import the getDelivery function
 import { formateCurrency } from "../utils/money.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js"; // Import the renderCheckoutHeader function
 
 
 export function renderPaymentSummary() {
@@ -60,6 +61,7 @@ export function renderPaymentSummary() {
         </button>
   `;
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHtml;
-  updateCartQuantityDisplay(); // Update cart quantity display
+  renderCheckoutHeader(); // Call function to render checkout header when the script loads
+  // updateCartQuantityDisplay(); // Update cart quantity display
 }
 

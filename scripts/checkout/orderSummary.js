@@ -6,6 +6,8 @@ import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; /
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js"; // Delivery options data
 import { renderPaymentSummary } from "./paymentSummary.js"; // Payment summary rendering function
 
+import { renderCheckoutHeader } from "../checkout/checkoutHeader.js";
+
 export function renderOrderSummary() {
   let cartSummaryHTML = ''; // Store HTML for cart summary
 
@@ -85,20 +87,15 @@ export function renderOrderSummary() {
   // Inject cart summary HTML into the page
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
 
-  // Update cart quantity display
-  function updateCartQuantityDisplay() {
-    const cartQuantity = calculateCartQuantity(); // Calculate total cart items
-    document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`; // Update display
-  }
 
   // Add event listeners for delete links
   document.querySelectorAll('.js-delete-link').forEach((link) => {
     link.addEventListener('click', () => {
       const productId = link.dataset.productId; // Get product ID
       removeCart(productId); // Remove item from cart
+      renderCheckoutHeader(); // Re-render header
       renderOrderSummary(); // Re-render summary
       renderPaymentSummary(); // Re-render payment summary
-      updateCartQuantityDisplay(); // Update quantity display
     });
   });
 

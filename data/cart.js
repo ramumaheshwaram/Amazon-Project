@@ -1,16 +1,24 @@
 // Initialize cart by retrieving it from localStorage, or use default cart if none exists
-export let cart = JSON.parse(localStorage.getItem('cart')) || [
-  {
-    productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6', // Hardcoded product ID
-    quantity: 2,// Default quantity
-    deliveryOptionId: '1' // Default delivery option ID
-  },
-  {
-    productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d', // Hardcoded product ID
-    quantity: 1, // Default quantity
-    deliveryOptionId: '2' // Default delivery option ID
-  }
-];
+export let cart;
+loadFromStorage();
+// for testing 
+
+export function loadFromStorage() {
+  cart = JSON.parse(localStorage.getItem('cart')) || [
+    {
+      productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6', // Hardcoded product ID
+      quantity: 2,// Default quantity
+      deliveryOptionId: '1' // Default delivery option ID
+    },
+    {
+      productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d', // Hardcoded product ID
+      quantity: 1, // Default quantity
+      deliveryOptionId: '2' // Default delivery option ID
+    }
+  ];
+}
+
+// end testing
 
 // Function to save the cart to localStorage
 function saveToStorage() {
@@ -34,7 +42,7 @@ export function addToCart(productId, quantity) {
     cart.push({
       productId,
       quantity,
-      deliveryOptionsId: '1' // Default delivery option ID
+      deliveryOptionId: '1' // Default delivery option ID
     });
   }
   saveToStorage(); // Save updated cart to localStorage
@@ -77,6 +85,9 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
       matchingItem = cartItem;
     }
   });
-  matchingItem.deliveryOptionId = deliveryOptionId; // Update delivery option ID
-  saveToStorage(); // Save updated cart to localStorage
+  if (matchingItem) {
+    matchingItem.deliveryOptionId = deliveryOptionId; // Update delivery option ID
+    saveToStorage(); // Save updated cart to localStorage
+  }
+
 }

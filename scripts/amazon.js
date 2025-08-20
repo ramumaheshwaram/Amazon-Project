@@ -65,7 +65,7 @@ function updateCartQuantityDisplay() {
 }
 
 // Variable to store timeout ID for clearing "Added" message
-let addedMessageTimeoutId;
+const addedMessageTimeouts = {};
 
 // Add event listeners to all "Add to Cart" buttons
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
@@ -80,13 +80,15 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`); // Get "Added" message element
     addedMessage.classList.add('added-message'); // Show "Added" message by adding CSS class
 
-    // Clear any existing timeout to prevent multiple timeouts from stacking
-    if (addedMessageTimeoutId) {
-      clearTimeout(addedMessageTimeoutId);
+    // Clear any existing timeout for this specific product
+    if (addedMessageTimeouts[productId]) {
+      clearTimeout(addedMessageTimeouts[productId]);
     }
-    // Set timeout to hide "Added" message after 2 seconds
-    addedMessageTimeoutId = setTimeout(() => {
+
+    // Set new timeout for this product and store it in the timeouts object
+    addedMessageTimeouts[productId] = setTimeout(() => {
       addedMessage.classList.remove('added-message'); // Hide "Added" message
+      delete addedMessageTimeouts[productId]; // Clean up the timeout entry
     }, 2000);
   });
 });

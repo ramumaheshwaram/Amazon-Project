@@ -26,7 +26,9 @@ export function renderOrderSummary() {
 
     // Add cart item HTML to summary
     cartSummaryHTML += `
-      <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+      <div class="cart-item-container 
+      js-cart-item-container
+      js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date js-delivery-date">
           Delivery date: ${formattedDate}
         </div>
@@ -35,7 +37,7 @@ export function renderOrderSummary() {
           <div class="cart-item-details">
             <div class="product-name">${matchingProduct.name}</div>
             <div class="product-price">$${formateCurrency(matchingProduct.priceCents)}</div>
-            <div class="product-quantity">
+            <div class="product-quantity js-product-quantity-${matchingProduct.id}">
               <span>Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span></span>
               <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
                 Update
@@ -44,7 +46,8 @@ export function renderOrderSummary() {
               <span class="save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">
                 Save
               </span>
-              <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
+              <span class="delete-quantity-link link-primary js-delete-link
+              js-delete-link-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
                 Delete
               </span>
             </div>

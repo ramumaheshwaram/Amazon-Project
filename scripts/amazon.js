@@ -19,13 +19,13 @@ products.forEach((product) => {
       </div>
       <div class="product-rating-container">
         <!-- Display star rating image based on product rating (stars multiplied by 10 for image file name) -->
-        <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars * 10}.png">
+        <img class="product-rating-stars" src="${product.getStarsUrl()}">
         <div class="product-rating-count link-primary">
           ${product.rating.count} <!-- Number of reviews/ratings -->
         </div>
       </div>
       <div class="product-price">
-        $${formateCurrency(product.priceCents)} <!-- Formatted price in dollars -->
+        ${product.getPrice()} <!-- Formatted price in dollars -->
       </div>
       <div class="product-quantity-container">
         <!-- Dropdown to select quantity (1 to 10) -->

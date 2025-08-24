@@ -1,3 +1,4 @@
+import { formateCurrency } from '../scripts/utils/money.js';
 export function getProduct(productId) {
   let matchingProduct;
   // Find the product in the products array that matches the cart item's product ID
@@ -9,6 +10,26 @@ export function getProduct(productId) {
   return matchingProduct;
 }
 
+class Product {
+  id;
+  image;
+  name;
+  rating;
+  priceCents;
+  constructor(productDetials) {
+    this.id = productDetials.id;
+    this.image = productDetials.image;
+    this.name = productDetials.name;
+    this.rating = productDetials.rating;
+    this.priceCents = productDetials.priceCents;
+  }
+  getStarsUrl() {
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
+  }
+  getPrice() {
+    return `$${formateCurrency(this.priceCents)}`;
+  }
+}
 
 export const products = [
   {
@@ -701,4 +722,7 @@ export const products = [
       "mens"
     ]
   }
-];
+].map((productDetials) => {
+  return new Product(productDetials);
+});
+console.log(products);

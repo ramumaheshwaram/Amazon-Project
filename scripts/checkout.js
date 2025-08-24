@@ -4,7 +4,7 @@ import { renderCheckoutHeader } from "./checkout/checkoutHeader.js"; // Import t
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 
 // import '../data/cart-oop.js';
-import '../data/cart-class.js';
+// import '../data/cart-class.js';
 
 
 renderPaymentSummary(); // Call function to render payment summary when the script loads

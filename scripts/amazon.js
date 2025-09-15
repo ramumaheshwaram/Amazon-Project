@@ -41,7 +41,10 @@ products.forEach((product) => {
           <option value="9">9</option>
           <option value="10">10</option>
         </select>
+
       </div>
+
+      ${product.extraInfo() || 'Additional product info if available'} 
       <div class="product-spacer"></div> <!-- Spacer for layout purposes -->
       <div class="added-to-cart js-added-to-cart-${product.id}">
         <img src="images/icons/checkmark.png"> <!-- Checkmark icon for "Added" message -->

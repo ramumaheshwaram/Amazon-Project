@@ -1,15 +1,20 @@
 // Importing necessary data and functions from other modules
 import { cart, addToCart, calculateCartQuantity } from "../data/cart.js"; // Imports cart array and functions to manage cart
-import { products } from "../data/products.js"; // Imports the products array containing product details
+import { products, loadProducts } from "../data/products.js"; // Imports the products array containing product details
 import { formateCurrency } from "./utils/money.js"; // Imports utility function to format price in dollars
 
-// Initialize an empty string to store HTML for product cards
-let productsHTML = '';
 
-// Loop through each product in the products array to generate HTML for product cards
-products.forEach((product) => {
-  // Append HTML for each product to productsHTML string
-  productsHTML += `
+loadProducts(renderProductsGrid);
+// Initialize an empty string to store HTML for product cards
+function renderProductsGrid() {
+
+
+  let productsHTML = '';
+
+  // Loop through each product in the products array to generate HTML for product cards
+  products.forEach((product) => {
+    // Append HTML for each product to productsHTML string
+    productsHTML += `
     <div class="product-container"> <!-- Container for individual product -->
       <div class="product-image-container">
         <img class="product-image" src="${product.image}"> <!-- Product image -->
@@ -56,45 +61,46 @@ products.forEach((product) => {
       </button>
     </div>
   `;
-});
-
-// Inject the generated product HTML into the product grid element on the page
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
-// Function to update the cart quantity display on the page
-function updateCartQuantityDisplay() {
-  const cartQuantity = calculateCartQuantity(); // Calculate total items in cart
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity; // Update cart quantity display
-}
-
-// Variable to store timeout ID for clearing "Added" message
-const addedMessageTimeouts = {};
-
-// Add event listeners to all "Add to Cart" buttons
-document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-  button.addEventListener('click', () => {
-    const { productId } = button.dataset; // Get product ID from button's data attribute
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`); // Get quantity selector for this product
-    const quantity = Number(quantitySelector.value); // Convert selected quantity to number
-
-    addToCart(productId, quantity); // Add product and quantity to cart
-    updateCartQuantityDisplay(); // Update cart quantity display
-
-    const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`); // Get "Added" message element
-    addedMessage.classList.add('added-message'); // Show "Added" message by adding CSS class
-
-    // Clear any existing timeout for this specific product
-    if (addedMessageTimeouts[productId]) {
-      clearTimeout(addedMessageTimeouts[productId]);
-    }
-
-    // Set new timeout for this product and store it in the timeouts object
-    addedMessageTimeouts[productId] = setTimeout(() => {
-      addedMessage.classList.remove('added-message'); // Hide "Added" message
-      delete addedMessageTimeouts[productId]; // Clean up the timeout entry
-    }, 2000);
   });
-});
 
-// Initial call to update cart quantity display when page loads
-updateCartQuantityDisplay();
+  // Inject the generated product HTML into the product grid element on the page
+  document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+  // Function to update the cart quantity display on the page
+  function updateCartQuantityDisplay() {
+    const cartQuantity = calculateCartQuantity(); // Calculate total items in cart
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity; // Update cart quantity display
+  }
+
+  // Variable to store timeout ID for clearing "Added" message
+  const addedMessageTimeouts = {};
+
+  // Add event listeners to all "Add to Cart" buttons
+  document.querySelectorAll('.js-add-to-cart').forEach((button) => {
+    button.addEventListener('click', () => {
+      const { productId } = button.dataset; // Get product ID from button's data attribute
+      const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`); // Get quantity selector for this product
+      const quantity = Number(quantitySelector.value); // Convert selected quantity to number
+
+      addToCart(productId, quantity); // Add product and quantity to cart
+      updateCartQuantityDisplay(); // Update cart quantity display
+
+      const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`); // Get "Added" message element
+      addedMessage.classList.add('added-message'); // Show "Added" message by adding CSS class
+
+      // Clear any existing timeout for this specific product
+      if (addedMessageTimeouts[productId]) {
+        clearTimeout(addedMessageTimeouts[productId]);
+      }
+
+      // Set new timeout for this product and store it in the timeouts object
+      addedMessageTimeouts[productId] = setTimeout(() => {
+        addedMessage.classList.remove('added-message'); // Hide "Added" message
+        delete addedMessageTimeouts[productId]; // Clean up the timeout entry
+      }, 2000);
+    });
+  });
+
+  // Initial call to update cart quantity display when page loads
+  updateCartQuantityDisplay();
+}

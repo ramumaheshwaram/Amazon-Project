@@ -7,6 +7,29 @@ import { loadProducts, loadProductsFetch } from "../data/products.js";
 import { loadCart } from '../data/cart.js';
 
 
+async function loadPage() {
+  console.log('load page');
+  await loadProductsFetch();
+  await new Promise((resolve) => {
+
+    loadCart(() => {
+      resolve();
+    });
+  });
+  renderPaymentSummary();
+  renderOrderSummary();
+  return 'value2'; // this get coveted into resolve  value
+
+}
+loadPage().then((value) => {
+
+  console.log('next step');
+  console.log(value);
+
+});
+
+/*
+
 Promise.all([
   loadProductsFetch(),
   new Promise((resolve) => {
@@ -19,6 +42,8 @@ Promise.all([
   renderPaymentSummary();
   renderOrderSummary();
 });
+
+*/
 
 // new Promise((resolve) => {
 //   console.log('start promise');

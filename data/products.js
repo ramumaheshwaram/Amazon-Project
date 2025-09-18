@@ -77,7 +77,7 @@ export function loadProducts(fun) {
       }
       return new Product(productDetials);
     });
-    console.log(products);
+    console.log('loding products');
     fun();
 
   });

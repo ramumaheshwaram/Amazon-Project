@@ -12,11 +12,11 @@ async function loadPage() {
     //throw 'error1';    we created manual error to test catch block
 
     await loadProductsFetch();
-    const value = await new Promise((resolve, reject) => {
+    const value = await new Promise((resolve) => {
       // throw 'error2';
       loadCart(() => {
-        reject('cart not loaded');
-        //resolve();
+        // reject('cart not loaded');
+        resolve();//
       });
     });
   }

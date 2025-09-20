@@ -8,25 +8,28 @@ import { loadCart } from '../data/cart.js';
 
 
 async function loadPage() {
-  console.log('load page');
-  await loadProductsFetch();
-  await new Promise((resolve) => {
+  try {
+    //throw 'error1';    we created manual error to test catch block
 
-    loadCart(() => {
-      resolve();
+    await loadProductsFetch();
+    const value = await new Promise((resolve, reject) => {
+      // throw 'error2';
+      loadCart(() => {
+        reject('cart not loaded');
+        //resolve();
+      });
     });
-  });
+  }
+  catch (e) {
+    console.log('unexpected error. Please try again later.');
+  }
+
   renderPaymentSummary();
   renderOrderSummary();
   return 'value2'; // this get coveted into resolve  value
 
 }
-loadPage().then((value) => {
-
-  console.log('next step');
-  console.log(value);
-
-});
+loadPage();
 
 /*
 

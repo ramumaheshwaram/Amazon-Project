@@ -46,6 +46,23 @@ class Clothing extends Product {
     `;
   }
 }
+class Appliance extends Product {
+  insructionLink;
+  warrantyLink;
+  constructor(productDetials) {
+    super(productDetials);
+    this.insructionLink = productDetials.insructionLink;
+    this.warrantyLink = productDetials.warrantyLink;
+
+  }
+  extraInfo() {
+    return `
+    <a href = "${this.insructionLink}" target="_blank">Size Chart</a>
+    <a href = "${this.warrantyLink}" target="_blank">Size Chart</a>
+
+    `;
+  }
+}
 
 // const date = new Date();
 // console.log(date);
@@ -66,6 +83,8 @@ class Clothing extends Product {
 // }
 // object3.method();
 
+
+
 export let products = [];
 
 export function loadProductsFetch() {
@@ -75,7 +94,9 @@ export function loadProductsFetch() {
     products = productsData.map((productDetials) => {
       if (productDetials.type === 'clothing') {
         return new Clothing(productDetials);
-
+      }
+      else if (productDetials.type === 'appliance') {
+        return new Appliance(productDetials);
       }
       return new Product(productDetials);
     });
@@ -91,6 +112,7 @@ export function loadProductsFetch() {
 //   console.log('next step');
 
 // });
+
 
 
 export function loadProducts(fun) {

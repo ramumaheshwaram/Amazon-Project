@@ -16,12 +16,14 @@ class Product {
   name;
   rating;
   priceCents;
+  keywords;
   constructor(productDetials) {
     this.id = productDetials.id;
     this.image = productDetials.image;
     this.name = productDetials.name;
     this.rating = productDetials.rating;
     this.priceCents = productDetials.priceCents;
+    this.keywords = productDetials.keywords;
   }
   getStarsUrl() {
     return `images/ratings/rating-${this.rating.stars * 10}.png`;

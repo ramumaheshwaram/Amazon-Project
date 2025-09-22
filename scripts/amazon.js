@@ -12,7 +12,28 @@ function renderProductsGrid() {
   let productsHTML = '';
 
   // Loop through each product in the products array to generate HTML for product cards
-  products.forEach((product) => {
+  const url = new URL(window.location.href);
+  const search = url.searchParams.get('search');
+  let filteredProducts = products;
+
+  // If a search exists in the URL parameters,
+  // filter the products that match the search.
+  if (search) {
+    filteredProducts = products.filter((product) => {
+      let matchingKeyword = false;
+
+      product.keywords.forEach((keyword) => {
+        if (keyword.toLowerCase().includes(search.toLowerCase())) {
+          matchingKeyword = true;
+        }
+      });
+
+      return matchingKeyword ||
+        product.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }
+
+  filteredProducts.forEach((product) => {
     // Append HTML for each product to productsHTML string
     productsHTML += `
     <div class="product-container"> <!-- Container for individual product -->
@@ -98,9 +119,17 @@ function renderProductsGrid() {
         addedMessage.classList.remove('added-message'); // Hide "Added" message
         delete addedMessageTimeouts[productId]; // Clean up the timeout entry
       }, 2000);
+
     });
   });
+  updateCartQuantityDisplay();
+
 
   // Initial call to update cart quantity display when page loads
-  updateCartQuantityDisplay();
+
+  document.querySelector('.js-search-button')
+    .addEventListener('click', () => {
+      const search = document.querySelector('.js-search-bar').value;
+      window.location.href = `amazon.html?search=${search}`;
+    });
 }

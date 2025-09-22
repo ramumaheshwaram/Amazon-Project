@@ -3,7 +3,8 @@ import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formateCurrency } from "../utils/money.js";
 import { renderCheckoutHeader } from "./checkoutHeader.js";
-import { addOrder } from '../../data/Orders.js';
+import { addOrder } from '../../data/orders.js';
+// ...existing code...
 
 export function renderPaymentSummary() {
   let productPriceCents = 0;
@@ -11,10 +12,24 @@ export function renderPaymentSummary() {
   let cartQuantity = 0;
 
   // Calculate totals
-  cart.forEach((cartItem) => {
+  cart.forEach((cartItem, index) => {
+    if (!cartItem.productId) {
+      console.warn(`Cart item at index ${index} has undefined productId:`, cartItem);
+      return; // Skip this cart item if productId is undefined
+    }
+
     const product = getProduct(cartItem.productId);
+    if (!product) {
+      console.warn(`Product not found for productId: ${cartItem.productId} in cart item at index ${index}:`, cartItem);
+      return; // Skip this cart item if product is not found
+    }
     productPriceCents += product.priceCents * cartItem.quantity;
+
     const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
+    if (!deliveryOption) {
+      console.warn(`Delivery option not found for deliveryOptionId: ${cartItem.deliveryOptionId} in cart item at index ${index}:`, cartItem);
+      return; // Skip if delivery option is not found
+    }
     shippingPriceCents += deliveryOption.priceCents;
     cartQuantity += cartItem.quantity;
   });
@@ -68,13 +83,20 @@ export function renderPaymentSummary() {
   // Add event listener to the new button
   newButton.addEventListener('click', async () => {
     try {
+      // Filter out invalid cart items before sending to the server
+      const validCart = cart.filter(cartItem => cartItem.productId && getProduct(cartItem.productId) && getDeliveryOption(cartItem.deliveryOptionId));
+      if (validCart.length === 0) {
+        alert('Your cart is empty or contains invalid items. Please review your cart.');
+        return;
+      }
+
       const response = await fetch('https://supersimplebackend.dev/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          cart: cart,
+          cart: validCart,
         })
       });
 

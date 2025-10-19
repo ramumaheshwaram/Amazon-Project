@@ -7,14 +7,14 @@ export function renderCheckoutHeader() {
   const checkoutHeaderHTML = `
  <div class="header-content">
       <div class="checkout-header-left-section">
-        <a href="amazon.html">
+        <a href="index.html">
           <img class="amazon-logo" src="images/logo.png">
           <img class="logo" src="images/logo.png">
         </a>
       </div>
 
       <div class="checkout-header-middle-section">
-        Checkout (<a class="return-to-home-link js-return-to-home-link" href="amazon.html"> ${cartQuantity} items</a>)
+        Checkout (<a class="return-to-home-link js-return-to-home-link" href="index.html"> ${cartQuantity} items</a>)
       </div>
 
       <div class="checkout-header-right-section">

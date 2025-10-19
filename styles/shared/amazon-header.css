@@ -43,7 +43,7 @@
   margin-top: 5px;
 }
 
-.amazon-mobile-logo {
+.logo {
   display: none;
 }
 
@@ -52,7 +52,7 @@
     display: none;
   }
 
-  .amazon-mobile-logo {
+  .logo {
     display: block;
     height: 35px;
     margin-top: 5px;
